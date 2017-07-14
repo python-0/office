@@ -1,0 +1,4 @@
+*.pyc
+front/
+static_root/
+.idea/
