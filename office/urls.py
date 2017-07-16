@@ -15,7 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from django.views.static import serve
+from django.conf import settings
+from main.views import IndexView
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^$', IndexView.as_view(), name='index'),
+    url(r'^media/(?P<path>.*)/$', serve, {"document_root": settings.MEDIA_ROOT})
 ]

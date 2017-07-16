@@ -1,0 +1,101 @@
+{% load static %}
+{% load filename %}
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>小二内网资源</title>
+    <link href="https://cdn.bootcss.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'css/my.css' %}" rel="stylesheet">
+</head>
+<body>
+    <br>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <form action="" method="post">
+                    <input type="text" class="form-control" name="search" placeholder="可模糊搜索文件名称、概要内容">
+                    {% csrf_token %}
+                </form>
+            </div>
+        </div>
+        <br>
+        <table class="table table-striped" >
+            <thead class="thead-inverse">
+                <tr>
+                    <th>文件名称</th>
+                    <th>文件大小</th>
+                    <th>简介</th>
+                    <th>下载</th>
+                    <th>详细说明</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for file in files %}
+                    <tr>
+                        <td>{{ file.name}}</td>
+                        <td>{{ file.file.size|filesizeformat }}</td>
+                        <td>{{ file.desc}}</td>
+                        <td><a class="button" href="media/{{ file.file }}" download="{{ file.file|get_filename }}" >下载</a></td>
+                        <td><a class="button" href="" data-toggle="modal" data-whatever="{{ file.detail }}" data-target="#exampleModalLong">详细说明</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-end">
+                {% if files.has_other_pages %}
+                    {% if files.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ users.previous_page_number }}">Previous</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1">Previous</a>
+                        </li>
+                    {% endif %}
+
+                    {% for i in files.paginator.page_range %}
+                        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                    {% endfor %}
+
+                    {% if files.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ files.next_page_number }}">Next</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link">Next</a>
+                        </li>
+                    {% endif %}
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link"> Previous</a>
+                    </li>
+                    <li class="page-item"><a class="page-link"> 1 </a></li>
+                    <li class="page-item disabled"><a class="page-link"> Next</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+
+    <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-body">
+              <textarea class="form-control" type="textarea" rows="20"></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+  </div>
+</div>
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
+<script src="{% static 'js/my.js' %}"></script>
+
+</body>
+</html>
